@@ -3,9 +3,12 @@ defmodule Blog.API.PostController do
 
   alias Blog.Post
 
-  def index(conn, _params) do
-    posts = Repo.all(Post)
-    render(conn, "index.json", posts: posts)
+  def index(conn, params) do
+    page = Post
+           |> order_by(asc: :id)
+           |> Repo.paginate(params)
+
+    render(conn, "index.json", posts: page.entries)
   end
 
   def show(conn, %{"id" => id}) do

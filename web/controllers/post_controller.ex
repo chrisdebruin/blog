@@ -3,9 +3,11 @@ defmodule Blog.PostController do
 
   alias Blog.Post
 
-  def index(conn, _params) do
-    posts = Repo.all(Post)
-    render(conn, "index.html", posts: posts)
+  def index(conn, params) do
+    page = Post
+           |> Repo.paginate(params)
+
+    render(conn, "index.html", posts: page.entries, page: page)
   end
 
   def new(conn, _params) do
